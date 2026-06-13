@@ -1,11 +1,12 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const port = 3000
+const port = 5000
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 app.use(cors())
 require('dotenv').config()
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -30,6 +31,13 @@ async function run() {
 
         const database = client.db('hireloop_db');
         const JobsCollection = database.collection('jobs');
+
+        app.post('/api/jobs', async (req, res) => {
+            const data = req.body
+            const result = await JobsCollection.insertOne(data)
+            res.send(result)
+        })
+
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
