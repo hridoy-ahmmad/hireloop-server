@@ -37,6 +37,17 @@ async function run() {
             const result = await JobsCollection.insertOne(data)
             res.send(result)
         })
+        app.get('/api/jobs', async (req, res) => {
+            const query = {}
+            if (req.query.companyId) {
+                query.companyId = req.query.companyId
+            }
+            if (req.query.status) {
+                query.status = req.query.status
+            }
+            const result = await JobsCollection.find(query).toArray()
+            res.send(result)
+        })
 
 
         await client.db("admin").command({ ping: 1 });
